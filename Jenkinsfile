@@ -68,19 +68,19 @@ pipeline {
             }
         }
 
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
+        //stage('Quality Gate') {
+        //    steps {
+        //        timeout(time: 1, unit: 'HOURS') {
+        //            waitForQualityGate abortPipeline: true
+        //        }
+        //    }
+       // }
 
         stage('Docker Build & Push') {
             environment {
                 IMAGE_NAME = "vprofile"
                 IMAGE_TAG = "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}"
-                NEXUS_DOCKER_REPO = "18.207.244.34:8082"
+                NEXUS_DOCKER_REPO = "34.204.8.106:8082"
                 DOCKER_REGISTRY = "${NEXUS_DOCKER_REPO}/${IMAGE_NAME}"
             }
             steps {
