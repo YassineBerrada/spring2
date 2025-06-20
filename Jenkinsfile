@@ -11,8 +11,10 @@ pipeline {
         maven "MAVEN3.9"
         jdk "JDK17"
     }
+    
     environment {
-        MAVEN_OPTS = "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
+        MAVEN_OPTS = "--add-opens jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
+                      --add-opens jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED"
     }
 
     stages {
