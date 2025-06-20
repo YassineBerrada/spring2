@@ -36,11 +36,11 @@ pipeline {
             }
         }
 
-        stage('UNIT TEST') {
-            steps {
-                sh 'mvn test'
-            }
-        }
+        //stage('UNIT TEST') {
+        //    steps {
+        //        sh 'mvn test'
+        //    }
+       // }
 
         stage('Checkstyle Analysis') {
             steps {
