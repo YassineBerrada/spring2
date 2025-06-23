@@ -5,10 +5,15 @@
 
   vars:
     image_name: "vprofile"
-    image_tag: "latest"  # Ce sera mis à jour dynamiquement plus tard si besoin
+    image_tag: "latest"
     nexus_registry: "3.88.248.130:8082"
+    nexus_username: "admin"
+    nexus_password: "YassineNexus12**"
 
   tasks:
+    - name: Authenticate to Nexus Docker registry
+      shell: echo "{{ nexus_password }}" | docker login {{ nexus_registry }} -u {{ nexus_username }} --password-stdin
+
     - name: Pull Docker image from Nexus
       shell: docker pull {{ nexus_registry }}/{{ image_name }}:{{ image_tag }}
 
@@ -22,4 +27,3 @@
       shell: |
         docker run -d --name {{ image_name }} -p 8080:8080 \
         {{ nexus_registry }}/{{ image_name }}:{{ image_tag }}
-
