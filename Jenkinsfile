@@ -102,7 +102,7 @@ pipeline {
             inventory: 'ansible/hosts.ini',
             credentialsId: 'sonarqube3'
         )
-}}Ò
+}}
 
 
 
