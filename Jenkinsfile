@@ -95,6 +95,18 @@ pipeline {
             }
         }
 
+        stage('Deploy with Ansible') {
+            steps {
+        ansiblePlaybook(
+            playbook: 'ansible/deploy_docker.yml',
+            inventory: 'ansible/hosts.ini',
+            ansibleName: 'ansible-2.10',
+            credentialsId: 'sonarqube3'
+        )
+    }
+}
+
+
     }
 
     post {
