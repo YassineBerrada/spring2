@@ -96,14 +96,17 @@ pipeline {
             }
         }
         stage('Deploy with Ansible') {
-    steps {
-        ansiblePlaybook(
-            playbook: 'ansible/deploy_docker.yml',
-            inventory: 'ansible/hosts.ini',
-            credentialsId: 'sonarqube3'
-        )
+  steps {
+    sshagent(credentials: ['sonar-ssh-key']) {
+      sh 'ssh-keyscan -H 3.83.33.150 >> ~/.ssh/known_hosts'
+      ansiblePlaybook(
+        playbook: 'ansible/deploy_docker.yml',
+        inventory: 'ansible/hosts.ini'
+      )
     }
+  }
 }
+
 
 
     }
