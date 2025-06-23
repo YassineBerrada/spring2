@@ -11,14 +11,12 @@ pipeline {
         maven "MAVEN3.9"
         jdk "JDK17"
     }
-    
+
     environment {
-          MAVEN_OPTS = "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
+        MAVEN_OPTS = "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED --add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
     }
 
-
     stages {
-
         stage('Fetch code') {
             steps {
                 git branch: 'main', url: 'https://github.com/YassineBerrada/spring2'
@@ -37,11 +35,13 @@ pipeline {
             }
         }
 
-        //stage('UNIT TEST') {
-        //    steps {
-        //        sh 'mvn test'
-        //    }
-    //    }
+        /*
+        stage('UNIT TEST') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        */
 
         stage('Checkstyle Analysis') {
             steps {
@@ -69,13 +69,15 @@ pipeline {
             }
         }
 
-        //stage('Quality Gate') {
-        //    steps {
-        //        timeout(time: 1, unit: 'HOURS') {
-        //            waitForQualityGate abortPipeline: true
-        //        }
-        //    }
-    //    }
+        /*
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        */
 
         stage('Docker Build & Push') {
             environment {
@@ -95,17 +97,16 @@ pipeline {
                 }
             }
         }
-        stage('Deploy with Ansible') {Add commentMore actions
-    steps {
-        ansiblePlaybook(
-            playbook: 'ansible/deploy_docker.yml',
-            inventory: 'ansible/hosts.ini',
-            credentialsId: 'sonarqube3'
-        )
-}}
 
-
-
+        stage('Deploy with Ansible') {
+            steps {
+                ansiblePlaybook(
+                    playbook: 'ansible/deploy_docker.yml',
+                    inventory: 'ansible/hosts.ini',
+                    credentialsId: 'sonarqube3'
+                )
+            }
+        }
     }
 
     post {
