@@ -80,23 +80,26 @@ pipeline {
         */
 
         stage('Docker Build & Push') {
-            environment {
-                IMAGE_NAME = "vprofile"
-                IMAGE_TAG = "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}"
-                NEXUS_DOCKER_REPO = "3.88.248.130:8082"
-                DOCKER_REGISTRY = "${NEXUS_DOCKER_REPO}/${IMAGE_NAME}"
-            }
-            steps {
-                script {
-                    sh """
-                        echo "YassineNexus12**" | docker login $NEXUS_DOCKER_REPO -u admin --password-stdin
-                        docker build -t $DOCKER_REGISTRY:$IMAGE_TAG .
-                        docker push $DOCKER_REGISTRY:$IMAGE_TAG
-                        docker logout $NEXUS_DOCKER_REPO
-                    """
-                }
-            }
+    environment {
+        IMAGE_NAME = "vprofile"
+        IMAGE_TAG = "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}"
+        NEXUS_DOCKER_REPO = "3.88.248.130:8082"
+        DOCKER_REGISTRY = "${NEXUS_DOCKER_REPO}/${IMAGE_NAME}"
+    }
+    steps {
+        script {
+            sh """
+                echo "YassineNexus12**" | docker login $NEXUS_DOCKER_REPO -u admin --password-stdin
+                docker build -t $DOCKER_REGISTRY:$IMAGE_TAG .
+                docker tag $DOCKER_REGISTRY:$IMAGE_TAG $DOCKER_REGISTRY:latest
+                docker push $DOCKER_REGISTRY:$IMAGE_TAG
+                docker push $DOCKER_REGISTRY:latest
+                docker logout $NEXUS_DOCKER_REPO
+            """
         }
+    }
+}
+
 
         stage('Deploy with Ansible') {
             steps {
